@@ -16,22 +16,65 @@
                             <h3 class="text-lg font-medium leading-6 font-heading border-b pb-2 mb-4">Memorial Information</h3>
                             <div class="space-y-6">
                                 <div>
-                                    <x-input-label for="full_name" value="Full Name of the Deceased" />
+                                    <x-input-label for="full_name" value="Full Name" />
                                     <x-text-input id="full_name" class="block mt-1 w-full" type="text" name="full_name" :value="old('full_name')" required autofocus />
                                     <x-input-error :messages="$errors->get('full_name')" class="mt-2" />
                                 </div>
+                                
+                                {{-- Date Dropdowns Section --}}
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {{-- Beginning Date --}}
                                     <div>
-                                        <x-input-label for="date_of_birth" value="Date of Birth" />
-                                        <x-text-input id="date_of_birth" class="block mt-1 w-full" type="date" name="date_of_birth" :value="old('date_of_birth')" required />
+                                        <x-input-label value="Beginning Date (Optional)" />
+                                        <div class="flex space-x-2 mt-1">
+                                            <select name="birth_month" class="w-1/3 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                                <option value="">Month</option>
+                                                @foreach(range(1, 12) as $month)
+                                                    <option value="{{ $month }}" @selected(old('birth_month') == $month)>{{ date('F', mktime(0, 0, 0, $month, 10)) }}</option>
+                                                @endforeach
+                                            </select>
+                                            <select name="birth_day" class="w-1/3 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                                <option value="">Day</option>
+                                                @foreach(range(1, 31) as $day)
+                                                    <option value="{{ $day }}" @selected(old('birth_day') == $day)>{{ $day }}</option>
+                                                @endforeach
+                                            </select>
+                                            <select name="birth_year" class="w-1/3 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                                <option value="">Year</option>
+                                                @foreach(range(date('Y'), 1880) as $year)
+                                                    <option value="{{ $year }}" @selected(old('birth_year') == $year)>{{ $year }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                         <x-input-error :messages="$errors->get('date_of_birth')" class="mt-2" />
                                     </div>
+                                    {{-- Ending Date --}}
                                     <div>
-                                        <x-input-label for="date_of_passing" value="Date of Passing" />
-                                        <x-text-input id="date_of_passing" class="block mt-1 w-full" type="date" name="date_of_passing" :value="old('date_of_passing')" required />
+                                        <x-input-label value="Ending Date (Optional)" />
+                                        <div class="flex space-x-2 mt-1">
+                                            <select name="passing_month" class="w-1/3 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                                <option value="">Month</option>
+                                                @foreach(range(1, 12) as $month)
+                                                    <option value="{{ $month }}" @selected(old('passing_month') == $month)>{{ date('F', mktime(0, 0, 0, $month, 10)) }}</option>
+                                                @endforeach
+                                            </select>
+                                            <select name="passing_day" class="w-1/3 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                                <option value="">Day</option>
+                                                @foreach(range(1, 31) as $day)
+                                                    <option value="{{ $day }}" @selected(old('passing_day') == $day)>{{ $day }}</option>
+                                                @endforeach
+                                            </select>
+                                            <select name="passing_year" class="w-1/3 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                                <option value="">Year</option>
+                                                @foreach(range(date('Y'), 1880) as $year)
+                                                    <option value="{{ $year }}" @selected(old('passing_year') == $year)>{{ $year }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                         <x-input-error :messages="$errors->get('date_of_passing')" class="mt-2" />
                                     </div>
                                 </div>
+                                
                                 <div>
                                     <x-input-label for="biography" value="Biography / Life Story" />
                                     <textarea id="biography" name="biography" rows="8" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('biography') }}</textarea>

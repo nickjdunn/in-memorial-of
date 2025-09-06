@@ -2,7 +2,10 @@
     @push('head')
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family={{ urlencode($memorial->font_family_name) }}:wght@400;700&family={{ urlencode($memorial->font_family_body) }}:wght@400;700&display=swap" rel="stylesheet">
+        {{-- Only load the fonts if they are set --}}
+        @if($memorial->font_family_name && $memorial->font_family_body)
+            <link href="https://fonts.googleapis.com/css2?family={{ urlencode($memorial->font_family_name) }}:wght@400;700&family={{ urlencode($memorial->font_family_body) }}:wght@400;700&display=swap" rel="stylesheet">
+        @endif
     @endpush
 
     <div class="bg-gray-100">
@@ -22,9 +25,21 @@
                     </h2>
                 </div>
 
-                <div class="mt-8 text-center text-gray-500" style="font-family: '{{ $memorial->font_family_body }}', sans-serif;">
-                    <p>{{ \Carbon\Carbon::parse($memorial->date_of_birth)->format('F j, Y') }} &mdash; {{ \Carbon\Carbon::parse($memorial->date_of_passing)->format('F j, Y') }}</p>
-                </div>
+                @if($memorial->date_of_birth || $memorial->date_of_passing)
+                    <div class="mt-8 text-center text-gray-500" style="font-family: '{{ $memorial->font_family_body }}', sans-serif;">
+                        <p>
+                            @if($memorial->date_of_birth)
+                                {{ \Carbon\Carbon::parse($memorial->date_of_birth)->format('F j, Y') }}
+                            @endif
+                            @if($memorial->date_of_birth && $memorial->date_of_passing)
+                                &mdash;
+                            @endif
+                            @if($memorial->date_of_passing)
+                                {{ \Carbon\Carbon::parse($memorial->date_of_passing)->format('F j, Y') }}
+                            @endif
+                        </p>
+                    </div>
+                @endif
 
                 <div class="mt-8 flex justify-center">
                     @if ($memorial->profile_photo_path)
