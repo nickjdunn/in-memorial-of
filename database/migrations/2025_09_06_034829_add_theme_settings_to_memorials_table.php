@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('memorials', function (Blueprint $table) {
-            $table->string('primary_color')->default('#0d9488')->after('slug'); // Default Teal
+            $table->string('primary_color')->default('#0d9488')->after('slug');
             $table->string('font_family_name')->default('Playfair Display')->after('primary_color');
             $table->string('font_family_body')->default('Lora')->after('font_family_name');
             $table->string('photo_shape')->default('rounded-full')->after('font_family_body');
@@ -25,7 +25,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('memorials', function (Blueprint $table) {
-            $table->dropColumn(['primary_color', 'font_family_name', 'font_family_body', 'photo_shape']);
+            $table->dropColumn([
+                'primary_color',
+                'font_family_name',
+                'font_family_body',
+                'photo_shape'
+            ]);
         });
     }
 };
