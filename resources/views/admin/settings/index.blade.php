@@ -1,9 +1,9 @@
 <x-app-layout>
+    {{-- Expanded Google Fonts preloading link for 60 fonts --}}
     @push('head')
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        {{-- Expanded font list for live previews --}}
-        <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;700&family=Roboto:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Open+Sans:wght@400;700&family=Lora:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&family=Source+Serif+4:wght@400;700&family=Nunito:wght@400;700&family=Poppins:wght@400;700&family=Inter:wght@400;700&family=Raleway:wght@400;700&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Alegreya&family=Arimo&family=Asap&family=Barlow&family=Bitter&family=Cabin&family=Cardo&family=Cormorant+Garamond&family=Crimson+Text&family=DM+Sans&family=Domine&family=Dosis&family=EB+Garamond&family=Exo+2&family=Figtree&family=Fira+Sans&family=Heebo&family=Hind&family=IBM+Plex+Sans&family=Inter&family=Josefin+Sans&family=Lato&family=Libre+Baskerville&family=Libre+Franklin&family=Lora&family=Manrope&family=Merriweather&family=Montserrat&family=Mulish&family=Noto+Serif&family=Nunito&family=Open+Sans&family=Oswald&family=Overpass&family=Oxygen&family=Playfair+Display&family=Poppins&family=PT+Sans&family=PT+Serif&family=Public+Sans&family=Quattrocento&family=Quicksand&family=Raleway&family=Roboto&family=Rubik&family=Source+Code+Pro&family=Source+Sans+3&family=Source+Serif+4&family=Space+Grotesk&family=Slabo+27px&family=Tajawal&family=Teko&family=Titillium+Web&family=Ubuntu&family=Vollkorn&family=Work+Sans&family=Zilla+Slab&display=swap" rel="stylesheet">
     @endpush
 
     <x-slot name="header">
@@ -26,7 +26,6 @@
                     @csrf
                     <div class="p-6 md:p-8 text-gray-900">
                         
-                        {{-- Two-column layout for Colors and Typography --}}
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
                             {{-- Column 1: All Color Settings --}}
@@ -84,13 +83,23 @@
                                 <p class="mt-1 text-sm text-gray-600">Choose the fonts for the website from Google Fonts.</p>
 
                                 @php
+                                    // Expanded and sorted font list (60 total)
                                     $fonts = [
-                                        'Arimo', 'Asap', 'Cabin', 'Dosis', 'Figtree', 'Fira Sans', 'Inter',
-                                        'Josefin Sans', 'Lato', 'Montserrat', 'Mulish', 'Nunito', 'Open Sans',
-                                        'Poppins', 'Quicksand', 'Raleway', 'Roboto',
-                                        'Alegreya', 'Bitter', 'Cardo', 'Cormorant Garamond', 'Crimson Text',
-                                        'Libre Baskerville', 'Lora', 'Merriweather', 'Noto Serif', 'Playfair Display',
-                                        'PT Serif', 'Source Serif 4',
+                                        // Sans-Serif (Modern, Clean)
+                                        'Arimo', 'Asap', 'Barlow', 'Cabin', 'DM Sans', 'Dosis', 'Exo 2', 'Figtree', 'Fira Sans',
+                                        'Heebo', 'Hind', 'IBM Plex Sans', 'Inter', 'Josefin Sans', 'Lato', 'Libre Franklin', 'Manrope',
+                                        'Montserrat', 'Mulish', 'Nunito', 'Open Sans', 'Oswald', 'Overpass', 'Oxygen', 'Poppins',
+                                        'Public Sans', 'Quicksand', 'Raleway', 'Roboto', 'Rubik', 'Source Sans 3', 'Tajawal',
+                                        'Teko', 'Titillium Web', 'Ubuntu', 'Work Sans',
+                                        // Serif (Classic, Elegant)
+                                        'Alegreya', 'Bitter', 'Cardo', 'Cormorant Garamond', 'Crimson Text', 'Domine',
+                                        'EB Garamond', 'Libre Baskerville', 'Lora', 'Merriweather', 'Noto Serif',
+                                        'Playfair Display', 'PT Serif', 'Quattrocento', 'Source Serif 4', 'Vollkorn',
+                                        'Zilla Slab',
+                                        // Slab Serif (Bold, Blocky)
+                                        'Slabo 27px',
+                                        // Monospace (Code-like)
+                                        'Source Code Pro', 'Space Grotesk',
                                     ];
                                     sort($fonts);
                                     
@@ -106,7 +115,7 @@
                                     <select id="{{ $fontSetting['name'] }}" name="{{ $fontSetting['name'] }}" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" data-preview-id="{{ $fontSetting['name'] }}_preview">
                                         @foreach ($fonts as $font)
                                             <option value="{{ $font }}" 
-                                                    style="font-family: '{{ $font }}', sans-serif; font-size: 1rem;"
+                                                    style="font-family: '{{ $font }}', sans-serif; font-size: 1.1rem;"
                                                     @selected(old($fontSetting['name'], $settings[$fontSetting['name']]) == $font)>
                                                 {{ $font }}
                                             </option>

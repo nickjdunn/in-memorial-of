@@ -47,7 +47,7 @@
                                             </select>
                                             <select name="birth_year" class="w-1/3 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                                                 <option value="">Year</option>
-                                                @foreach(range(date('Y'), 1880) as $year)
+                                                @foreach(range(date('Y'), 1800) as $year)
                                                     <option value="{{ $year }}" @selected(old('birth_year', $birthDate?->year) == $year)>{{ $year }}</option>
                                                 @endforeach
                                             </select>
@@ -72,7 +72,7 @@
                                             </select>
                                             <select name="passing_year" class="w-1/3 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                                                 <option value="">Year</option>
-                                                @foreach(range(date('Y'), 1880) as $year)
+                                                @foreach(range(date('Y'), 1800) as $year)
                                                     <option value="{{ $year }}" @selected(old('passing_year', $passingDate?->year) == $year)>{{ $year }}</option>
                                                 @endforeach
                                             </select>
@@ -113,8 +113,8 @@
                             <h3 class="text-lg font-medium leading-6 font-heading border-b pb-2 mb-4">Page Theme & Appearance</h3>
                             <div class="space-y-6">
                                 @php
-                                    $fonts = ['Playfair Display', 'Lora', 'Merriweather', 'Source Serif 4', 'Figtree', 'Roboto', 'Lato', 'Montserrat', 'Inter', 'Open Sans'];
-                                    sort($fonts);
+                                    $themeFonts = ['Playfair Display', 'Lora', 'Merriweather', 'Source Serif 4', 'Figtree', 'Roboto', 'Lato', 'Montserrat', 'Inter', 'Open Sans'];
+                                    sort($themeFonts);
                                     $photoShapes = [
                                         ['value' => 'rounded-full', 'label' => 'Circle'],
                                         ['value' => 'rounded-2xl', 'label' => 'Rounded Square'],
@@ -135,7 +135,7 @@
                                 <div>
                                     <x-input-label for="font_family_name" value="Name & Title Font" />
                                     <select id="font_family_name" name="font_family_name" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                                        @foreach ($fonts as $font)
+                                        @foreach ($themeFonts as $font)
                                             <option value="{{ $font }}" @selected(old('font_family_name', $memorial->font_family_name) == $font)>{{ $font }}</option>
                                         @endforeach
                                     </select>
@@ -146,7 +146,7 @@
                                 <div>
                                     <x-input-label for="font_family_body" value="Biography Font" />
                                     <select id="font_family_body" name="font_family_body" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                                        @foreach ($fonts as $font)
+                                        @foreach ($themeFonts as $font)
                                             <option value="{{ $font }}" @selected(old('font_family_body', $memorial->font_family_body) == $font)>{{ $font }}</option>
                                         @endforeach
                                     </select>
