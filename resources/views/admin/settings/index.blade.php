@@ -1,9 +1,9 @@
 <x-app-layout>
-    {{-- Expanded Google Fonts preloading link for 60 fonts --}}
+    {{-- The font URL can be generated programmatically in the future, for now we list them --}}
     @push('head')
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Alegreya&family=Arimo&family=Asap&family=Barlow&family=Bitter&family=Cabin&family=Cardo&family=Cormorant+Garamond&family=Crimson+Text&family=DM+Sans&family=Domine&family=Dosis&family=EB+Garamond&family=Exo+2&family=Figtree&family=Fira+Sans&family=Heebo&family=Hind&family=IBM+Plex+Sans&family=Inter&family=Josefin+Sans&family=Lato&family=Libre+Baskerville&family=Libre+Franklin&family=Lora&family=Manrope&family=Merriweather&family=Montserrat&family=Mulish&family=Noto+Serif&family=Nunito&family=Open+Sans&family=Oswald&family=Overpass&family=Oxygen&family=Playfair+Display&family=Poppins&family=PT+Sans&family=PT+Serif&family=Public+Sans&family=Quattrocento&family=Quicksand&family=Raleway&family=Roboto&family=Rubik&family=Source+Code+Pro&family=Source+Sans+3&family=Source+Serif+4&family=Space+Grotesk&family=Slabo+27px&family=Tajawal&family=Teko&family=Titillium+Web&family=Ubuntu&family=Vollkorn&family=Work+Sans&family=Zilla+Slab&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Alegreya&family=Asap&family=Bitter&family=Cabin&family=Caveat&family=Cormorant+Garamond&family=Crimson+Text&family=Dancing+Script&family=Domine&family=EB+Garamond&family=Figtree&family=Inter&family=Kalam&family=Lato&family=Libre+Baskerville&family=Lora&family=Merriweather&family=Montserrat&family=Mulish&family=Nunito&family=Open+Sans&family=Patrick+Hand&family=Playfair+Display&family=Poppins&family=PT+Serif&family=Raleway&family=Roboto&family=Source+Serif+4&family=Work+Sans&display=swap" rel="stylesheet">
     @endpush
 
     <x-slot name="header">
@@ -83,26 +83,6 @@
                                 <p class="mt-1 text-sm text-gray-600">Choose the fonts for the website from Google Fonts.</p>
 
                                 @php
-                                    // Expanded and sorted font list (60 total)
-                                    $fonts = [
-                                        // Sans-Serif (Modern, Clean)
-                                        'Arimo', 'Asap', 'Barlow', 'Cabin', 'DM Sans', 'Dosis', 'Exo 2', 'Figtree', 'Fira Sans',
-                                        'Heebo', 'Hind', 'IBM Plex Sans', 'Inter', 'Josefin Sans', 'Lato', 'Libre Franklin', 'Manrope',
-                                        'Montserrat', 'Mulish', 'Nunito', 'Open Sans', 'Oswald', 'Overpass', 'Oxygen', 'Poppins',
-                                        'Public Sans', 'Quicksand', 'Raleway', 'Roboto', 'Rubik', 'Source Sans 3', 'Tajawal',
-                                        'Teko', 'Titillium Web', 'Ubuntu', 'Work Sans',
-                                        // Serif (Classic, Elegant)
-                                        'Alegreya', 'Bitter', 'Cardo', 'Cormorant Garamond', 'Crimson Text', 'Domine',
-                                        'EB Garamond', 'Libre Baskerville', 'Lora', 'Merriweather', 'Noto Serif',
-                                        'Playfair Display', 'PT Serif', 'Quattrocento', 'Source Serif 4', 'Vollkorn',
-                                        'Zilla Slab',
-                                        // Slab Serif (Bold, Blocky)
-                                        'Slabo 27px',
-                                        // Monospace (Code-like)
-                                        'Source Code Pro', 'Space Grotesk',
-                                    ];
-                                    sort($fonts);
-                                    
                                     $fontSettings = [
                                         ['name' => 'font_family_base', 'label' => 'Base Text Font'],
                                         ['name' => 'font_family_headings', 'label' => 'Headings Font'],
@@ -113,12 +93,16 @@
                                 <div>
                                     <label for="{{ $fontSetting['name'] }}" class="block text-sm font-medium text-gray-700">{{ $fontSetting['label'] }}</label>
                                     <select id="{{ $fontSetting['name'] }}" name="{{ $fontSetting['name'] }}" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" data-preview-id="{{ $fontSetting['name'] }}_preview">
-                                        @foreach ($fonts as $font)
-                                            <option value="{{ $font }}" 
-                                                    style="font-family: '{{ $font }}', sans-serif; font-size: 1.1rem;"
-                                                    @selected(old($fontSetting['name'], $settings[$fontSetting['name']]) == $font)>
-                                                {{ $font }}
-                                            </option>
+                                        @foreach (config('fonts.options') as $group => $fonts)
+                                            <optgroup label="{{ $group }}">
+                                                @foreach ($fonts as $font)
+                                                    <option value="{{ $font }}" 
+                                                            style="font-family: '{{ $font }}', sans-serif; font-size: 1.1rem;"
+                                                            @selected(old($fontSetting['name'], $settings[$fontSetting['name']]) == $font)>
+                                                        {{ $font }}
+                                                    </option>
+                                                @endforeach
+                                            </optgroup>
                                         @endforeach
                                     </select>
                                     <div id="{{ $fontSetting['name'] }}_preview" class="mt-2 p-4 bg-gray-100 rounded-md text-lg">

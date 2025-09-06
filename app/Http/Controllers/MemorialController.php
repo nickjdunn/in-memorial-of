@@ -11,9 +11,6 @@ use Illuminate\Validation\Rule;
 
 class MemorialController extends Controller
 {
-    /**
-     * Helper function to combine date parts into a valid date string or null.
-     */
     private function combineDate($year, $month, $day)
     {
         if ($year && $month && $day && checkdate($month, $day, $year)) {
@@ -44,14 +41,14 @@ class MemorialController extends Controller
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
             'birth_month' => 'nullable|integer|min:1|max:12',
             'birth_day'   => 'nullable|integer|min:1|max:31',
-            'birth_year'  => 'nullable|integer|min:1880',
+            'birth_year'  => 'nullable|integer|min:1800',
             'passing_month' => 'nullable|integer|min:1|max:12',
             'passing_day'   => 'nullable|integer|min:1|max:31',
-            'passing_year'  => 'nullable|integer|min:1880',
+            'passing_year'  => 'nullable|integer|min:1800',
             'primary_color' => 'required|string|max:7',
             'font_family_name' => 'required|string|max:255',
             'font_family_body' => 'required|string|max:255',
-            'photo_shape' => ['required', 'string', Rule::in(['rounded-full', 'rounded-2xl', ''])],
+            'photo_shape' => ['required', 'string', Rule::in(['rounded-full', 'rounded-2xl', '', 'shape-diamond', 'shape-octagon', 'shape-heart', 'shape-cross'])],
         ]);
 
         $birthDate = $this->combineDate($request->birth_year, $request->birth_month, $request->birth_day);
@@ -115,14 +112,14 @@ class MemorialController extends Controller
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
             'birth_month' => 'nullable|integer|min:1|max:12',
             'birth_day'   => 'nullable|integer|min:1|max:31',
-            'birth_year'  => 'nullable|integer|min:1880',
+            'birth_year'  => 'nullable|integer|min:1800',
             'passing_month' => 'nullable|integer|min:1|max:12',
             'passing_day'   => 'nullable|integer|min:1|max:31',
-            'passing_year'  => 'nullable|integer|min:1880',
+            'passing_year'  => 'nullable|integer|min:1800',
             'primary_color' => 'required|string|max:7',
             'font_family_name' => 'required|string|max:255',
             'font_family_body' => 'required|string|max:255',
-            'photo_shape' => ['required', 'string', Rule::in(['rounded-full', 'rounded-2xl', ''])],
+            'photo_shape' => ['required', 'string', Rule::in(['rounded-full', 'rounded-2xl', '', 'shape-diamond', 'shape-octagon', 'shape-heart', 'shape-cross'])],
         ]);
 
         $birthDate = $this->combineDate($request->birth_year, $request->birth_month, $request->birth_day);
