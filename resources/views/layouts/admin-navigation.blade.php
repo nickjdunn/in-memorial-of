@@ -3,11 +3,13 @@
         <div class="flex h-12">
             <!-- Navigation Links -->
             <div class="flex space-x-8">
-                <x-nav-link-sub :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                    {{ __('Overview') }}
+                <x-nav-link-sub :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                    {{ __('Users') }}
                 </x-nav-link-sub>
 
-                {{-- We can add direct links to Users and Memorials management here in the future --}}
+                <x-nav-link-sub :href="route('admin.memorials.index')" :active="request()->routeIs('admin.memorials.*')">
+                    {{ __('Memorials') }}
+                </x-nav-link-sub>
 
                 <x-nav-link-sub :href="route('admin.settings.index')" :active="request()->routeIs('admin.settings.*')">
                     {{ __('Site Settings') }}

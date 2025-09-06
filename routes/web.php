@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MemorialController as AdminMemorialController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DynamicCssController;
@@ -59,9 +60,14 @@ Route::get('/memorials/{memorial:slug}', [MemorialController::class, 'showPublic
 
 // --- ADMIN ROUTES ---
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Redirect the base dashboard to the users list
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Dedicated resource routes for Users and Memorials
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/memorials', [AdminMemorialController::class, 'index'])->name('memorials.index');
 
-    // Admin Memorial Management Routes
+    // Admin Memorial Management Routes (These are for actions like edit/delete)
     Route::get('/memorials/{memorial}/edit', [MemorialController::class, 'edit'])->name('memorials.edit');
     Route::put('/memorials/{memorial}', [MemorialController::class, 'update'])->name('memorials.update');
     Route::delete('/memorials/{memorial}', [MemorialController::class, 'destroy'])->name('memorials.destroy');
