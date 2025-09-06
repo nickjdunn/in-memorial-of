@@ -81,7 +81,11 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .text-brand-700 { color: var(--color-primary-700); }
 .text-brand-900 { color: var(--color-primary-900); }
 
-
 .border-brand-500 { border-color: var(--color-primary-500); }
 
 .focus\:ring-brand-500:focus { --tw-ring-color: var(--color-primary-500); }
+
+/* Memorial page specific background */
+.memorial-page-bg {
+    background-color: #111827; /* Tailwind's gray-900 */
+}

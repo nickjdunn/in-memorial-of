@@ -86,7 +86,8 @@
 
                                 <div>
                                     <x-input-label for="biography" value="Biography / Life Story" />
-                                    <textarea id="biography" name="biography" rows="8" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('biography', $memorial->biography) }}</textarea>
+                                    <input id="biography" type="hidden" name="biography" value="{{ old('biography', $memorial->biography) }}">
+                                    <trix-editor input="biography" class="trix-content"></trix-editor>
                                     <x-input-error :messages="$errors->get('biography')" class="mt-2" />
                                 </div>
                             </div>
@@ -206,12 +207,12 @@
             const photoShapeSelect = document.querySelector('select[data-preview-target="photo-preview"]');
             if (photoShapeSelect) {
                 const previewImage = document.getElementById(photoShapeSelect.dataset.previewTarget);
-                const allShapeClasses = ['rounded-full', 'rounded-2xl', 'shape-diamond', 'shape-octagon', 'shape-heart', 'shape-cross'];
+                const allShapeClasses = ['rounded-full', 'rounded-2xl', '', 'shape-diamond', 'shape-octagon', 'shape-heart', 'shape-cross'];
 
                 photoShapeSelect.addEventListener('change', function () {
                     if (previewImage) {
                         allShapeClasses.forEach(cls => {
-                            if (cls) { // Only remove the class if it's not an empty string
+                            if (cls) {
                                 previewImage.classList.remove(cls);
                             }
                         });

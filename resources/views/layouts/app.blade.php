@@ -11,6 +11,10 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="{{ get_google_font_url() }}" rel="stylesheet">
+        
+        <!-- Trix Editor Assets -->
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+        <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js" defer></script>
 
         <!-- Scripts & Static Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -36,7 +40,6 @@
                 @endif
             </div>
 
-            {{-- NEW: Conditionally include the admin sub-navigation --}}
             @if (request()->routeIs('admin.*'))
                 @include('layouts.admin-navigation')
             @endif
