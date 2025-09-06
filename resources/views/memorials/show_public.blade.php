@@ -1,0 +1,52 @@
+<x-guest-layout>
+    @push('head')
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family={{ urlencode($memorial->font_family_name) }}:wght@400;700&family={{ urlencode($memorial->font_family_body) }}:wght@400;700&display=swap" rel="stylesheet">
+    @endpush
+
+    <div class="bg-gray-100">
+        <div class="min-h-screen flex flex-col items-center pt-12 pb-6">
+
+            <div class="w-full sm:max-w-4xl p-6 md:p-12 bg-white shadow-lg overflow-hidden sm:rounded-lg"
+                 style="border-top: 8px solid {{ $memorial->primary_color }};">
+                
+                <div class="text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold" 
+                        style="color: {{ $memorial->primary_color }}; font-family: '{{ $memorial->font_family_name }}', serif;">
+                        In Loving Memory of
+                    </h1>
+                    <h2 class="text-3xl md:text-4xl mt-2"
+                        style="color: #111827; font-family: '{{ $memorial->font_family_name }}', serif;">
+                        {{ $memorial->full_name }}
+                    </h2>
+                </div>
+
+                <div class="mt-8 text-center text-gray-500" style="font-family: '{{ $memorial->font_family_body }}', sans-serif;">
+                    <p>{{ \Carbon\Carbon::parse($memorial->date_of_birth)->format('F j, Y') }} &mdash; {{ \Carbon\Carbon::parse($memorial->date_of_passing)->format('F j, Y') }}</p>
+                </div>
+
+                <div class="mt-8 flex justify-center">
+                    @if ($memorial->profile_photo_path)
+                        <img src="{{ asset('storage/' . $memorial->profile_photo_path) }}" 
+                             alt="{{ $memorial->full_name }}" 
+                             class="w-48 h-48 md:w-64 md:h-64 object-cover shadow-xl border-4 border-white {{ $memorial->photo_shape }}">
+                    @endif
+                </div>
+
+                <div class="mt-12 pt-8 border-t border-gray-200">
+                    <div class="prose lg:prose-xl max-w-none text-gray-700 text-justify"
+                         style="font-family: '{{ $memorial->font_family_body }}', sans-serif;">
+                        <p>{!! nl2br(e($memorial->biography)) !!}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="w-full text-center text-gray-500 py-6 mt-8">
+                <p>&copy; {{ date('Y') }} In Memorial Of. All Rights Reserved.</p>
+                <p class="text-sm mt-2"><a href="{{ url('/') }}" class="hover:underline" style="color: {{ $memorial->primary_color }}">Create a memorial page for your loved one.</a></p>
+            </footer>
+
+        </div>
+    </div>
+</x-guest-layout>
