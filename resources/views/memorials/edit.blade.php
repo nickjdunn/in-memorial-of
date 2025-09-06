@@ -17,6 +17,11 @@
                 <form method="POST" action="{{ route('memorials.update', $memorial) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
+
+                    @if(request()->has('from_user'))
+                        <input type="hidden" name="redirect_to_user" value="{{ request()->get('from_user') }}">
+                    @endif
+
                     <div class="p-6 md:p-8 space-y-6">
                         
                         {{-- Memorial Information Section --}}
@@ -189,7 +194,7 @@
                     </div>
                     
                     <div class="flex items-center justify-end p-6 bg-gray-50 border-t border-gray-200">
-                        <a href="{{ route('dashboard') }}" class="text-sm">
+                        <a href="{{ request()->has('from_user') ? route('admin.users.edit', request()->get('from_user')) : route('dashboard') }}" class="text-sm">
                             Cancel
                         </a>
                         <x-primary-button class="ml-4">

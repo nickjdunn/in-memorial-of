@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl page-title font-heading">
-            {{ __('Memorial Management') }}
+            {{ __('Admin Dashboard') }}
         </h2>
     </x-slot>
 
@@ -26,7 +26,12 @@
                                 @forelse ($memorials as $memorial)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">{{ $memorial->full_name }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $memorial->user->name }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{-- UPDATED: Make the owner's name a link to their edit page --}}
+                                            <a href="{{ route('admin.users.edit', $memorial->user) }}" class="hover:underline">
+                                                {{ $memorial->user->name }}
+                                            </a>
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $memorial->created_at->format('M d, Y') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-4">
                                             <a href="{{ route('memorials.show_public', $memorial->slug) }}" target="_blank">View</a>

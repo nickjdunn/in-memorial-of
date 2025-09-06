@@ -14,7 +14,6 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex main-nav">
-                    {{-- CORRECTED ORDER: Homepage is now first --}}
                     <x-nav-link :href="url('/')" :active="request()->is('/')">
                         {{ __('Homepage') }}
                     </x-nav-link>
@@ -24,11 +23,8 @@
                     </x-nav-link>
 
                     @if (auth()->user()?->is_admin)
-                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
                             {{ __('Admin Dashboard') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('admin.settings.index')" :active="request()->routeIs('admin.settings.*')">
-                            {{ __('Site Settings') }}
                         </x-nav-link>
                     @endif
                 </div>
@@ -83,7 +79,6 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden main-nav-responsive">
         <div class="pt-2 pb-3 space-y-1 main-nav">
-            {{-- CORRECTED ORDER: Homepage is now first --}}
             <x-responsive-nav-link :href="url('/')" :active="request()->is('/')">
                 {{ __('Homepage') }}
             </x-responsive-nav-link>
@@ -93,11 +88,8 @@
             </x-responsive-nav-link>
 
             @if (auth()->user()?->is_admin)
-                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
                     {{ __('Admin Dashboard') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('admin.settings.index')" :active="request()->routeIs('admin.settings.*')">
-                    {{ __('Site Settings') }}
                 </x-responsive-nav-link>
             @endif
         </div>

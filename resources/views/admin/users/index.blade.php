@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl page-title font-heading">
-            {{ __('User Management') }}
+            {{ __('Admin Dashboard') }}
         </h2>
     </x-slot>
 

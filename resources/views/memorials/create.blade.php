@@ -7,7 +7,8 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl page-title font-heading">
-            {{ __('Create Memorial Page') }}
+            {{-- Title changes if an admin is creating for a user --}}
+            {{ isset($userFor) ? 'Create Memorial for ' . $userFor->name : 'Create Memorial Page' }}
         </h2>
     </x-slot>
     <div class="py-12 main-content">
@@ -15,6 +16,11 @@
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg border border-gray-200">
                 <form method="POST" action="{{ route('memorials.store') }}" enctype="multipart/form-data">
                     @csrf
+                    
+                    @isset($userFor)
+                        <input type="hidden" name="user_id" value="{{ $userFor->id }}">
+                    @endisset
+
                     <div class="p-6 md:p-8 space-y-6">
                         
                         {{-- Memorial Information Section --}}
@@ -184,7 +190,7 @@
                     </div>
                     
                     <div class="flex items-center justify-end p-6 bg-gray-50 border-t border-gray-200">
-                        <a href="{{ route('dashboard') }}" class="text-sm">
+                        <a href="{{ isset($userFor) ? route('admin.users.edit', $userFor) : route('dashboard') }}" class="text-sm">
                             Cancel
                         </a>
                         <x-primary-button class="ml-4">

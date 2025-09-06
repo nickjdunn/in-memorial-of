@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Memorial;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -30,11 +31,6 @@ class MemorialController extends Controller
 
     public function store(Request $request)
     {
-        $user = auth()->user();
-        if ($user->memorials()->count() >= $user->memorial_slots_purchased) {
-            return redirect()->route('dashboard')->with('error', 'You must purchase a memorial slot before creating a new page.');
-        }
-
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
             'biography' => 'required|string',
@@ -49,7 +45,16 @@ class MemorialController extends Controller
             'font_family_name' => 'required|string|max:255',
             'font_family_body' => 'required|string|max:255',
             'photo_shape' => ['required', 'string', Rule::in(['rounded-full', 'rounded-2xl', '', 'shape-diamond', 'shape-octagon', 'shape-heart', 'shape-cross'])],
+            'user_id' => 'sometimes|required|exists:users,id', // For admin creation
         ]);
+
+        $isAdminCreation = $request->has('user_id') && auth()->user()->is_admin;
+        $targetUser = $isAdminCreation ? User::find($validated['user_id']) : auth()->user();
+
+        if ($targetUser->memorials()->count() >= $targetUser->memorial_slots_purchased) {
+            $redirectRoute = $isAdminCreation ? route('admin.users.edit', $targetUser) : route('dashboard');
+            return redirect($redirectRoute)->with('error', 'This user has no available memorial slots.');
+        }
 
         $birthDate = $this->combineDate($request->birth_year, $request->birth_month, $request->birth_day);
         $passingDate = $this->combineDate($request->passing_year, $request->passing_month, $request->passing_day);
@@ -71,7 +76,7 @@ class MemorialController extends Controller
         $slug = Str::slug($validated['full_name']) . '-' . uniqid();
         
         Memorial::create([
-            'user_id' => auth()->id(),
+            'user_id' => $targetUser->id,
             'full_name' => $validated['full_name'],
             'date_of_birth' => $birthDate,
             'date_of_passing' => $passingDate,
@@ -84,6 +89,9 @@ class MemorialController extends Controller
             'photo_shape' => $validated['photo_shape'],
         ]);
         
+        if ($isAdminCreation) {
+            return redirect()->route('admin.users.edit', $targetUser)->with('status', 'Memorial page created successfully for ' . $targetUser->name);
+        }
         return redirect()->route('dashboard')->with('status', 'Memorial page created successfully!');
     }
 
@@ -105,7 +113,6 @@ class MemorialController extends Controller
         if (auth()->id() !== $memorial->user_id && !auth()->user()->is_admin) {
             abort(403);
         }
-
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
             'biography' => 'required|string',
@@ -120,15 +127,15 @@ class MemorialController extends Controller
             'font_family_name' => 'required|string|max:255',
             'font_family_body' => 'required|string|max:255',
             'photo_shape' => ['required', 'string', Rule::in(['rounded-full', 'rounded-2xl', '', 'shape-diamond', 'shape-octagon', 'shape-heart', 'shape-cross'])],
+            'redirect_to_user' => 'nullable|exists:users,id',
         ]);
 
         $birthDate = $this->combineDate($request->birth_year, $request->birth_month, $request->birth_day);
         $passingDate = $this->combineDate($request->passing_year, $request->passing_month, $request->passing_day);
-
         if ($birthDate && $passingDate && strtotime($passingDate) < strtotime($birthDate)) {
             return back()->withInput()->withErrors(['date_of_passing' => 'The ending date cannot be before the beginning date.']);
         }
-        
+
         if ($request->hasFile('profile_photo')) {
             if ($memorial->profile_photo_path) {
                 Storage::disk('public')->delete($memorial->profile_photo_path);
@@ -141,18 +148,13 @@ class MemorialController extends Controller
             $memorial->profile_photo_path = 'photos/' . $fileName;
         }
 
-        $memorial->full_name = $validated['full_name'];
+        $memorial->fill($validated);
         $memorial->date_of_birth = $birthDate;
         $memorial->date_of_passing = $passingDate;
-        $memorial->biography = $validated['biography'];
-        $memorial->primary_color = $validated['primary_color'];
-        $memorial->font_family_name = $validated['font_family_name'];
-        $memorial->font_family_body = $validated['font_family_body'];
-        $memorial->photo_shape = $validated['photo_shape'];
         $memorial->save();
-
-        if (auth()->user()->is_admin) {
-             return redirect()->route('admin.dashboard')->with('status', 'Memorial page updated successfully!');
+        
+        if ($request->has('redirect_to_user') && auth()->user()->is_admin) {
+             return redirect()->route('admin.users.edit', $request->redirect_to_user)->with('status', 'Memorial page updated successfully!');
         }
         return redirect()->route('dashboard')->with('status', 'Memorial page updated successfully!');
     }
@@ -167,7 +169,7 @@ class MemorialController extends Controller
         }
         $memorial->delete();
         if (auth()->user()->is_admin) {
-             return redirect()->route('admin.dashboard')->with('status', 'Memorial page deleted successfully.');
+             return redirect()->route('admin.users.index')->with('status', 'Memorial page deleted successfully.');
         }
         return redirect()->route('dashboard')->with('status', 'Memorial page deleted successfully.');
     }

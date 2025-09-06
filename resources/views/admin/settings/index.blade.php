@@ -1,14 +1,13 @@
 <x-app-layout>
-    {{-- The font URL can be generated programmatically in the future, for now we list them --}}
     @push('head')
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Alegreya&family=Asap&family=Bitter&family=Cabin&family=Caveat&family=Cormorant+Garamond&family=Crimson+Text&family=Dancing+Script&family=Domine&family=EB+Garamond&family=Figtree&family=Inter&family=Kalam&family=Lato&family=Libre+Baskerville&family=Lora&family=Merriweather&family=Montserrat&family=Mulish&family=Nunito&family=Open+Sans&family=Patrick+Hand&family=Playfair+Display&family=Poppins&family=PT+Serif&family=Raleway&family=Roboto&family=Source+Serif+4&family=Work+Sans&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Alegreya&family=Arimo&family=Asap&family=Barlow&family=Bitter&family=Cabin&family=Cardo&family=Cormorant+Garamond&family=Crimson+Text&family=DM+Sans&family=Domine&family=Dosis&family=EB+Garamond&family=Exo+2&family=Figtree&family=Fira+Sans&family=Heebo&family=Hind&family=IBM+Plex+Sans&family=Inter&family=Josefin+Sans&family=Lato&family=Libre+Baskerville&family=Lora&family=Manrope&family=Merriweather&family=Montserrat&family=Mulish&family=Noto+Serif&family=Nunito&family=Open+Sans&family=Oswald&family=Overpass&family=Oxygen&family=Playfair+Display&family=Poppins&family=PT+Sans&family=PT+Serif&family=Public+Sans&family=Quattrocento&family=Quicksand&family=Raleway&family=Roboto&family=Rubik&family=Source+Code+Pro&family=Source+Sans+3&family=Source+Serif+4&family=Space+Grotesk&family=Slabo+27px&family=Tajawal&family=Teko&family=Titillium+Web&family=Ubuntu&family=Vollkorn&family=Work+Sans&family=Zilla+Slab&display=swap" rel="stylesheet">
     @endpush
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl page-title font-heading">
-            {{ __('Site Settings') }}
+            {{ __('Admin Dashboard') }}
         </h2>
     </x-slot>
 
@@ -83,6 +82,7 @@
                                 <p class="mt-1 text-sm text-gray-600">Choose the fonts for the website from Google Fonts.</p>
 
                                 @php
+                                    $fonts = config('fonts.options');
                                     $fontSettings = [
                                         ['name' => 'font_family_base', 'label' => 'Base Text Font'],
                                         ['name' => 'font_family_headings', 'label' => 'Headings Font'],
@@ -93,9 +93,9 @@
                                 <div>
                                     <label for="{{ $fontSetting['name'] }}" class="block text-sm font-medium text-gray-700">{{ $fontSetting['label'] }}</label>
                                     <select id="{{ $fontSetting['name'] }}" name="{{ $fontSetting['name'] }}" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" data-preview-id="{{ $fontSetting['name'] }}_preview">
-                                        @foreach (config('fonts.options') as $group => $fonts)
+                                        @foreach ($fonts as $group => $fontList)
                                             <optgroup label="{{ $group }}">
-                                                @foreach ($fonts as $font)
+                                                @foreach ($fontList as $font)
                                                     <option value="{{ $font }}" 
                                                             style="font-family: '{{ $font }}', sans-serif; font-size: 1.1rem;"
                                                             @selected(old($fontSetting['name'], $settings[$fontSetting['name']]) == $font)>

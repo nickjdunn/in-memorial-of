@@ -54,8 +54,15 @@
 
             {{-- User's Memorials List --}}
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg border border-gray-200">
-                 <div class="p-6 bg-gray-50 border-b border-gray-200">
+                 <div class="p-6 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
                     <h3 class="text-xl font-bold font-heading">Memorials Created by this User</h3>
+                    @if($user->memorials()->count() < $user->memorial_slots_purchased)
+                        <a href="{{ route('admin.users.memorials.create', $user) }}" class="button-link inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500">
+                            Create Memorial For User
+                        </a>
+                    @else
+                        <span class="text-sm text-gray-500 italic">All purchased slots used</span>
+                    @endif
                 </div>
                 <div class="p-6">
                     <div class="overflow-x-auto">
@@ -74,7 +81,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $memorial->created_at->format('M d, Y') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-4">
                                             <a href="{{ route('memorials.show_public', $memorial->slug) }}" target="_blank">View</a>
-                                            <a href="{{ route('admin.memorials.edit', $memorial) }}">Edit</a>
+                                            <a href="{{ route('admin.memorials.edit', $memorial) }}?from_user={{ $user->id }}">Edit</a>
                                             <form class="inline-block" method="POST" action="{{ route('admin.memorials.destroy', $memorial) }}" onsubmit="return confirm('Are you sure you want to delete the memorial for {{ addslashes($memorial->full_name) }}? This action cannot be undone.');">
                                                 @csrf
                                                 @method('DELETE')
