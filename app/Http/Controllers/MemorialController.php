@@ -32,7 +32,13 @@ class MemorialController extends Controller
             'date_of_passing' => 'required|date|after_or_equal:date_of_birth',
             'biography' => 'required|string',
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+            // Add validation for new theme fields
+            'primary_color' => 'required|string|max:7',
+            'font_family_name' => 'required|string|max:255',
+            'font_family_body' => 'required|string|max:255',
+            'photo_shape' => ['required', 'string', Rule::in(['rounded-full', 'rounded-2xl', ''])],
         ]);
+
         $photoPath = null;
         if ($request->hasFile('profile_photo')) {
             $image = $request->file('profile_photo');
@@ -42,7 +48,9 @@ class MemorialController extends Controller
             Storage::disk('public')->put('photos/' . $fileName, (string) $processedImage->toWebp(75));
             $photoPath = 'photos/' . $fileName;
         }
+        
         $slug = Str::slug($validated['full_name']) . '-' . uniqid();
+        
         Memorial::create([
             'user_id' => $user->id,
             'full_name' => $validated['full_name'],
@@ -51,7 +59,13 @@ class MemorialController extends Controller
             'biography' => $validated['biography'],
             'profile_photo_path' => $photoPath,
             'slug' => $slug,
+            // Save the theme fields on create
+            'primary_color' => $validated['primary_color'],
+            'font_family_name' => $validated['font_family_name'],
+            'font_family_body' => $validated['font_family_body'],
+            'photo_shape' => $validated['photo_shape'],
         ]);
+        
         return redirect()->route('dashboard')->with('status', 'Memorial page created successfully!');
     }
 

@@ -22,7 +22,8 @@
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg border border-gray-200">
                 <div class="p-6 bg-gray-50 border-b border-gray-200 md:flex md:items-center md:justify-between">
                     <h3 class="text-xl font-bold font-heading">Your Memorial Slots</h3>
-                    <div class="mt-4 md:mt-0 flex space-x-2">
+                    <div class="mt-4 md:mt-0 flex items-center space-x-2">
+                        {{-- The Admin Area link has been removed from here --}}
                         <a href="{{ route('purchase.show') }}" class="button-link inline-flex items-center px-4 py-2 bg-brand-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-brand-500">
                             Purchase Another Slot
                         </a>

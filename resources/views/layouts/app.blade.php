@@ -7,30 +7,46 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <!-- Dynamic Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="{{ get_google_font_url() }}" rel="stylesheet">
 
-        <!-- Scripts -->
+        <!-- Scripts & Static Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <!-- Dynamic Color Styles -->
+        <link rel="stylesheet" href="{{ route('css.dynamic') }}">
+
+        @stack('head')
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+        <div class="min-h-screen bg-gray-100">
+            
+            <div class="unified-header shadow">
+                @include('layouts.navigation')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+                <!-- Page Heading -->
+                @if (isset($header))
+                    <header>
+                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                            {{ $header }}
+                        </div>
+                    </header>
+                @endif
+            </div>
+
+            {{-- NEW: Conditionally include the admin sub-navigation --}}
+            @if (request()->routeIs('admin.*'))
+                @include('layouts.admin-navigation')
+            @endif
 
             <!-- Page Content -->
-            <main>
+            <main class="main-content">
                 {{ $slot }}
             </main>
         </div>
+        
+        @stack('scripts')
     </body>
 </html>
