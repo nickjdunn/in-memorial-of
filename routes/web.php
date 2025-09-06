@@ -9,6 +9,8 @@ use App\Http\Controllers\MemorialController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
 use App\Models\Memorial;
+use App\Models\Setting;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,9 +24,12 @@ Route::get('/css/dynamic-styles.css', [DynamicCssController::class, 'generate'])
 
 // Homepage Route with Example Memorial
 Route::get('/', function () {
-    $exampleMemorial = Memorial::whereHas('user', function ($query) {
-        $query->where('email', 'example@inmemorialof.com');
-    })->first();
+    // Cache the query for performance for 60 minutes
+    $exampleMemorial = Cache::remember('homepage_example_memorial', 3600, function () {
+        $setting = Setting::where('key', 'homepage_example_memorial_id')->first();
+        // Eager load the user to avoid extra queries in the view
+        return $setting ? Memorial::with('user')->find($setting->value) : null;
+    });
 
     return view('welcome', [
         'exampleMemorial' => $exampleMemorial

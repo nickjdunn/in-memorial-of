@@ -7,7 +7,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl page-title font-heading">
-            {{ __('Admin Dashboard') }}
+            {{ __('Site Settings') }}
         </h2>
     </x-slot>
 
@@ -25,7 +25,24 @@
                     @csrf
                     <div class="p-6 md:p-8 text-gray-900">
                         
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-6 mb-8">
+                            <h3 class="text-xl font-bold font-heading border-b pb-2">Homepage Example</h3>
+                            <p class="mt-1 text-sm text-gray-600">Choose which memorial page to feature on the public homepage. This is a great way to showcase a beautiful example to new visitors.</p>
+
+                            <div>
+                                <label for="homepage_example_memorial_id" class="block text-sm font-medium text-gray-700">Featured Memorial</label>
+                                <select id="homepage_example_memorial_id" name="homepage_example_memorial_id" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                    <option value="">-- None --</option>
+                                    @foreach ($memorials as $memorial)
+                                        <option value="{{ $memorial->id }}" @selected(old('homepage_example_memorial_id', $settings['homepage_example_memorial_id']) == $memorial->id)>
+                                            {{ $memorial->full_name }} (by {{ $memorial->user->name }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t">
 
                             {{-- Column 1: All Color Settings --}}
                             <div class="space-y-6">
@@ -82,7 +99,6 @@
                                 <p class="mt-1 text-sm text-gray-600">Choose the fonts for the website from Google Fonts.</p>
 
                                 @php
-                                    $fonts = config('fonts.options');
                                     $fontSettings = [
                                         ['name' => 'font_family_base', 'label' => 'Base Text Font'],
                                         ['name' => 'font_family_headings', 'label' => 'Headings Font'],
@@ -93,9 +109,9 @@
                                 <div>
                                     <label for="{{ $fontSetting['name'] }}" class="block text-sm font-medium text-gray-700">{{ $fontSetting['label'] }}</label>
                                     <select id="{{ $fontSetting['name'] }}" name="{{ $fontSetting['name'] }}" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" data-preview-id="{{ $fontSetting['name'] }}_preview">
-                                        @foreach ($fonts as $group => $fontList)
+                                        @foreach (config('fonts.options') as $group => $fonts)
                                             <optgroup label="{{ $group }}">
-                                                @foreach ($fontList as $font)
+                                                @foreach ($fonts as $font)
                                                     <option value="{{ $font }}" 
                                                             style="font-family: '{{ $font }}', sans-serif; font-size: 1.1rem;"
                                                             @selected(old($fontSetting['name'], $settings[$fontSetting['name']]) == $font)>
