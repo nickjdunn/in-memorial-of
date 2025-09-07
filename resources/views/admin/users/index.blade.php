@@ -8,8 +8,11 @@
     <div class="py-12 main-content">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg border border-gray-200">
-                <div class="p-6 bg-gray-50 border-b border-gray-200">
+                <div class="p-6 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
                     <h3 class="text-xl font-bold font-heading">All Users</h3>
+                    <a href="{{ route('admin.users.create') }}" class="button-link inline-flex items-center px-4 py-2 bg-brand-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-brand-500">
+                        Create New User
+                    </a>
                 </div>
                 <div class="p-6">
                     <div class="overflow-x-auto">
