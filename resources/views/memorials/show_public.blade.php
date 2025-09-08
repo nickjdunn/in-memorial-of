@@ -9,6 +9,7 @@
 
     <div class="min-h-screen py-8 sm:py-12 px-4">
 
+        <!-- ============== MAIN MEMORIAL BOX ============== -->
         <div class="w-full max-w-4xl mx-auto p-6 md:p-12 bg-white shadow-2xl overflow-hidden sm:rounded-lg"
              style="border-top: 8px solid {{ $memorial->primary_color }};">
             
@@ -54,10 +55,12 @@
                     </div>
                 </div>
             </div>
-
-            <!-- ================= TRIBUTES SECTION ================= -->
-            @if ($memorial->tributes_enabled)
-            <div x-data="{ open: false }" class="mt-12 pt-8 border-t border-gray-200">
+        </div> <!-- End of Main Memorial Box -->
+        
+        <!-- ============== NEW, SEPARATE TRIBUTES BOX ============== -->
+        @if ($memorial->tributes_enabled)
+        <div class="w-full max-w-4xl mx-auto p-6 md:p-12 bg-white shadow-2xl overflow-hidden sm:rounded-lg mt-8">
+            <div x-data="{ open: false }">
                 
                 <h2 class="text-3xl text-center font-bold mb-6" style="color: {{ $memorial->primary_color }}; font-family: '{{ $memorial->font_family_name }}', serif;">Tributes</h2>
 
@@ -118,8 +121,8 @@
                     </form>
                 </div>
             </div>
-            @endif
         </div>
+        @endif <!-- End of Tributes Box conditional -->
         
         <footer class="w-full max-w-4xl mx-auto text-center text-gray-500 py-6 mt-4 px-6">
             <p>&copy; {{ date('Y') }} In Memorial Of. All Rights Reserved.</p>
