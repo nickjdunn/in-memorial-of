@@ -193,6 +193,22 @@
                             </div>
                         </div>
 
+                        <!-- ================ NEW: ENABLE TRIBUTES TOGGLE ================ -->
+                        <div class="pt-6 border-t">
+                            <h3 class="text-lg font-medium leading-6 font-heading border-b pb-2 mb-4">Page Features</h3>
+                            <div class="relative flex items-start">
+                                <div class="flex h-6 items-center">
+                                    <input id="tributes_enabled" name="tributes_enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                    @checked(old('tributes_enabled', $memorial->tributes_enabled))>
+                                </div>
+                                <div class="ml-3 text-sm leading-6">
+                                    <label for="tributes_enabled" class="font-medium text-gray-900">Enable Tributes</label>
+                                    <p class="text-gray-500">Allow visitors to leave tributes on the memorial page. This feature can be turned on or off at any time.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================= -->
+
                     </div>
                     
                     <div class="flex items-center justify-end p-6 bg-gray-50 border-t border-gray-200">
