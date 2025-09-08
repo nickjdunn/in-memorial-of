@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Memorial;
+use App\Models\Tribute;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -45,7 +46,8 @@ class MemorialController extends Controller
             'font_family_name' => 'required|string|max:255',
             'font_family_body' => 'required|string|max:255',
             'photo_shape' => ['required', 'string', Rule::in(['rounded-full', 'rounded-2xl', '', 'shape-diamond', 'shape-octagon', 'shape-heart', 'shape-cross'])],
-            'user_id' => 'sometimes|required|exists:users,id', // For admin creation
+            'user_id' => 'sometimes|required|exists:users,id',
+            'tributes_enabled' => 'nullable|string',
         ]);
 
         $isAdminCreation = $request->has('user_id') && auth()->user()->is_admin;
@@ -87,6 +89,7 @@ class MemorialController extends Controller
             'font_family_name' => $validated['font_family_name'],
             'font_family_body' => $validated['font_family_body'],
             'photo_shape' => $validated['photo_shape'],
+            'tributes_enabled' => $request->has('tributes_enabled'),
         ]);
         
         if ($isAdminCreation) {
@@ -97,7 +100,13 @@ class MemorialController extends Controller
 
     public function showPublic(Memorial $memorial)
     {
-        return view('memorials.show_public', compact('memorial'));
+        // Get the approved tributes for this memorial.
+        $approvedTributes = Tribute::where('memorial_id', $memorial->id)
+            ->where('status', 'approved')
+            ->latest()
+            ->get();
+
+        return view('memorials.show_public', compact('memorial', 'approvedTributes'));
     }
 
     public function edit(Memorial $memorial)
@@ -128,6 +137,7 @@ class MemorialController extends Controller
             'font_family_body' => 'required|string|max:255',
             'photo_shape' => ['required', 'string', Rule::in(['rounded-full', 'rounded-2xl', '', 'shape-diamond', 'shape-octagon', 'shape-heart', 'shape-cross'])],
             'redirect_to_user' => 'nullable|exists:users,id',
+            'tributes_enabled' => 'nullable|string',
         ]);
 
         $birthDate = $this->combineDate($request->birth_year, $request->birth_month, $request->birth_day);
@@ -151,6 +161,7 @@ class MemorialController extends Controller
         $memorial->fill($validated);
         $memorial->date_of_birth = $birthDate;
         $memorial->date_of_passing = $passingDate;
+        $memorial->tributes_enabled = $request->has('tributes_enabled');
         $memorial->save();
         
         if ($request->has('redirect_to_user') && auth()->user()->is_admin) {

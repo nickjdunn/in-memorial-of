@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            <!-- ================= NEW TRIBUTES SECTION ================= -->
+            <!-- ================= TRIBUTES SECTION ================= -->
             @if ($memorial->tributes_enabled)
             <div x-data="{ open: false }" class="mt-12 pt-8 border-t border-gray-200">
                 
@@ -69,9 +69,19 @@
                     </div>
                 @endif
 
-                <!-- Display Approved Tributes (placeholder) -->
+                <!-- Display Approved Tributes -->
                 <div class="space-y-6 mb-8 text-left">
-                    {{-- Approved tributes will be displayed here in a future step --}}
+                    @forelse ($approvedTributes as $tribute)
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <p class="font-semibold text-gray-800">{{ $tribute->name }}</p>
+                            <p class="text-sm text-gray-500 mb-2">{{ $tribute->created_at->format('F j, Y \a\t g:i a') }}</p>
+                            <p class="text-gray-700 whitespace-pre-wrap">{{ $tribute->message }}</p>
+                        </div>
+                    @empty
+                        <div class="text-center py-4">
+                            <p class="text-gray-500">Be the first to leave a tribute.</p>
+                        </div>
+                    @endforelse
                 </div>
                 
                 <!-- Toggle Button -->
@@ -109,8 +119,6 @@
                 </div>
             </div>
             @endif
-            <!-- ================= END TRIBUTES SECTION ================= -->
-
         </div>
         
         <footer class="w-full max-w-4xl mx-auto text-center text-gray-500 py-6 mt-4 px-6">

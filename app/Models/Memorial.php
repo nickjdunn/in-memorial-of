@@ -28,7 +28,7 @@ class Memorial extends Model
         'font_family_name',
         'font_family_body',
         'photo_shape',
-        'tributes_enabled',
+        'tributes_enabled', // This allows it to be mass-assigned
     ];
 
     /**
@@ -39,7 +39,7 @@ class Memorial extends Model
     protected $casts = [
         'date_of_birth' => 'date',
         'date_of_passing' => 'date',
-        'tributes_enabled' => 'boolean',
+        'tributes_enabled' => 'boolean', // This is the critical fix
     ];
 
     /**

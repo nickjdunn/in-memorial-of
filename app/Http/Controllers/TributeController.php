@@ -11,8 +11,6 @@ class TributeController extends Controller
 {
     /**
      * Display a listing of the tributes for the authenticated user to moderate.
-     *
-     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -24,16 +22,18 @@ class TributeController extends Controller
             ->where('status', 'pending')
             ->latest()
             ->get();
+        
+        $approvedTributes = Tribute::with('memorial')
+            ->whereIn('memorial_id', $memorialIds)
+            ->where('status', 'approved')
+            ->latest()
+            ->get();
 
-        return view('tributes.index', compact('pendingTributes'));
+        return view('tributes.index', compact('pendingTributes', 'approvedTributes'));
     }
 
     /**
      * Store a newly created tribute in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Memorial  $memorial
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request, Memorial $memorial)
     {
@@ -57,13 +57,9 @@ class TributeController extends Controller
 
     /**
      * Approve the specified tribute.
-     *
-     * @param  \App\Models\Tribute  $tribute
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function approve(Tribute $tribute)
     {
-        // Authorization check: ensure the user owns the memorial this tribute belongs to
         if ($tribute->memorial->user_id !== Auth::id()) {
             abort(403);
         }
@@ -75,13 +71,9 @@ class TributeController extends Controller
 
     /**
      * Remove the specified tribute from storage.
-     *
-     * @param  \App\Models\Tribute  $tribute
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Tribute $tribute)
     {
-        // Authorization check: ensure the user owns the memorial this tribute belongs to
         if ($tribute->memorial->user_id !== Auth::id()) {
             abort(403);
         }

@@ -19,6 +19,7 @@ class Tribute extends Model
         'memorial_id',
         'name',
         'message',
+        'status', // <-- THIS IS THE FIX.
     ];
 
     /**
