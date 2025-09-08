@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Memorial extends Model
 {
@@ -27,6 +28,18 @@ class Memorial extends Model
         'font_family_name',
         'font_family_body',
         'photo_shape',
+        'tributes_enabled',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'date_of_birth' => 'date',
+        'date_of_passing' => 'date',
+        'tributes_enabled' => 'boolean',
     ];
 
     /**
@@ -35,5 +48,13 @@ class Memorial extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the tributes for the memorial.
+     */
+    public function tributes(): HasMany
+    {
+        return $this->hasMany(Tribute::class);
     }
 }

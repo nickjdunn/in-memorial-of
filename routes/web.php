@@ -8,6 +8,7 @@ use App\Http\Controllers\DynamicCssController;
 use App\Http\Controllers\MemorialController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\TributeController; // ADD THIS LINE
 use App\Models\Memorial;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
@@ -50,6 +51,9 @@ Route::middleware('auth')->group(function () {
 
 // Public Memorial Page Route
 Route::get('/memorials/{memorial:slug}', [MemorialController::class, 'showPublic'])->name('memorials.show_public');
+
+// --- NEW TRIBUTE SUBMISSION ROUTE ---
+Route::post('/memorials/{memorial:slug}/tributes', [TributeController::class, 'store'])->name('tributes.store');
 
 // --- ADMIN ROUTES ---
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
