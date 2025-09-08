@@ -12,9 +12,9 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="{{ get_google_font_url() }}" rel="stylesheet">
         
-        <!-- Trix Editor Assets -->
-        <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
-        <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js" defer></script>
+        <!-- QuillJS Assets -->
+        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 
         <!-- Scripts & Static Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -29,8 +29,6 @@
             
             <div class="unified-header shadow">
                 @include('layouts.navigation')
-
-                <!-- Page Heading -->
                 @if (isset($header))
                     <header>
                         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">

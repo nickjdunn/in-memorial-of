@@ -14,7 +14,7 @@
     <div class="py-12 main-content">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg border border-gray-200">
-                <form method="POST" action="{{ route('memorials.update', $memorial) }}" enctype="multipart/form-data">
+                <form id="memorial-form" method="POST" action="{{ route('memorials.update', $memorial) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -91,8 +91,10 @@
 
                                 <div>
                                     <x-input-label for="biography" value="Biography / Life Story" />
-                                    <input id="biography" type="hidden" name="biography" value="{{ old('biography', $memorial->biography) }}">
-                                    <trix-editor input="biography" class="trix-content"></trix-editor>
+                                    <input name="biography" type="hidden">
+                                    <div id="editor-container" class="mt-1">
+                                        {!! old('biography', $memorial->biography) !!}
+                                    </div>
                                     <x-input-error :messages="$errors->get('biography')" class="mt-2" />
                                 </div>
                             </div>
@@ -207,27 +209,56 @@
     </div>
     
     @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const photoShapeSelect = document.querySelector('select[data-preview-target="photo-preview"]');
-            if (photoShapeSelect) {
-                const previewImage = document.getElementById(photoShapeSelect.dataset.previewTarget);
-                const allShapeClasses = ['rounded-full', 'rounded-2xl', '', 'shape-diamond', 'shape-octagon', 'shape-heart', 'shape-cross'];
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const photoShapeSelect = document.querySelector('select[data-preview-target="photo-preview"]');
+                if (photoShapeSelect) {
+                    const previewImage = document.getElementById(photoShapeSelect.dataset.previewTarget);
+                    const allShapeClasses = ['rounded-full', 'rounded-2xl', '', 'shape-diamond', 'shape-octagon', 'shape-heart', 'shape-cross'];
 
-                photoShapeSelect.addEventListener('change', function () {
-                    if (previewImage) {
-                        allShapeClasses.forEach(cls => {
-                            if (cls) {
-                                previewImage.classList.remove(cls);
+                    photoShapeSelect.addEventListener('change', function () {
+                        if (previewImage) {
+                            allShapeClasses.forEach(cls => {
+                                if (cls) {
+                                    previewImage.classList.remove(cls);
+                                }
+                            });
+                            if (this.value) {
+                                previewImage.classList.add(this.value);
                             }
-                        });
-                        if (this.value) {
-                            previewImage.classList.add(this.value);
                         }
+                    });
+                }
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const quill = new Quill('#editor-container', {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            [{ 'header': [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'color': [] }, { 'background': [] }],
+                            [{ 'align': [] }],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            ['link'],
+                            ['clean']
+                        ]
                     }
                 });
-            }
-        });
-    </script>
+
+                const form = document.querySelector('#memorial-form');
+                const hiddenInput = document.querySelector('input[name=biography]');
+
+                form.addEventListener('submit', function() {
+                    const editorContent = quill.root.innerHTML;
+                    if (editorContent === '<p><br></p>') {
+                        hiddenInput.value = '';
+                    } else {
+                        hiddenInput.value = editorContent;
+                    }
+                });
+            });
+        </script>
     @endpush
 </x-app-layout>

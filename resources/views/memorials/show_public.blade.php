@@ -48,9 +48,10 @@
             </div>
 
             <div class="mt-12 pt-8 border-t border-gray-200">
-                <div class="prose lg:prose-lg max-w-none text-gray-700 text-justify"
-                     style="font-family: '{{ $memorial->font_family_body }}', sans-serif;">
-                    {!! $memorial->biography !!}
+                <div class="ql-snow">
+                    <div class="ql-editor" style="font-family: '{{ $memorial->font_family_body }}', sans-serif; padding: 0;">
+                        {!! $memorial->biography !!}
+                    </div>
                 </div>
             </div>
         </div>
