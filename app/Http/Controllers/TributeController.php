@@ -60,13 +60,14 @@ class TributeController extends Controller
      */
     public function approve(Tribute $tribute)
     {
-        if ($tribute->memorial->user_id !== Auth::id()) {
+        // MODIFIED: Allow if owner OR if admin
+        if ($tribute->memorial->user_id !== Auth::id() && !Auth::user()->is_admin) {
             abort(403);
         }
 
         $tribute->update(['status' => 'approved']);
 
-        return redirect()->route('tributes.index')->with('success', 'Tribute approved successfully.');
+        return back()->with('success', 'Tribute approved successfully.');
     }
 
     /**
@@ -74,12 +75,13 @@ class TributeController extends Controller
      */
     public function destroy(Tribute $tribute)
     {
-        if ($tribute->memorial->user_id !== Auth::id()) {
+        // MODIFIED: Allow if owner OR if admin
+        if ($tribute->memorial->user_id !== Auth::id() && !Auth::user()->is_admin) {
             abort(403);
         }
 
         $tribute->delete();
 
-        return redirect()->route('tributes.index')->with('success', 'Tribute deleted successfully.');
+        return back()->with('success', 'Tribute deleted successfully.');
     }
 }

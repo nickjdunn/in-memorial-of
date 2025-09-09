@@ -100,7 +100,6 @@ class MemorialController extends Controller
 
     public function showPublic(Memorial $memorial)
     {
-        // Get the approved tributes for this memorial.
         $approvedTributes = Tribute::where('memorial_id', $memorial->id)
             ->where('status', 'approved')
             ->latest()
@@ -114,7 +113,13 @@ class MemorialController extends Controller
         if (auth()->id() !== $memorial->user_id && !auth()->user()->is_admin) {
             abort(403);
         }
-        return view('memorials.edit', compact('memorial'));
+
+        // MODIFIED: Eager load tributes and separate them by status
+        $memorial->load('tributes');
+        $pendingTributes = $memorial->tributes->where('status', 'pending');
+        $approvedTributes = $memorial->tributes->where('status', 'approved');
+
+        return view('memorials.edit', compact('memorial', 'pendingTributes', 'approvedTributes'));
     }
 
     public function update(Request $request, Memorial $memorial)
