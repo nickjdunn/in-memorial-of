@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Casts\Attribute; // Add this line
 
 class Memorial extends Model
 {
@@ -28,7 +29,18 @@ class Memorial extends Model
         'font_family_name',
         'font_family_body',
         'photo_shape',
-        'tributes_enabled', // This allows it to be mass-assigned
+        'tributes_enabled',
+        'visibility',
+        'password', // Add this line
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password', // Add this line to hide password by default
     ];
 
     /**
@@ -39,7 +51,7 @@ class Memorial extends Model
     protected $casts = [
         'date_of_birth' => 'date',
         'date_of_passing' => 'date',
-        'tributes_enabled' => 'boolean', // This is the critical fix
+        'tributes_enabled' => 'boolean',
     ];
 
     /**
@@ -56,5 +68,17 @@ class Memorial extends Model
     public function tributes(): HasMany
     {
         return $this->hasMany(Tribute::class);
+    }
+
+    /**
+     * Interact with the memorial's password.
+     *
+     * This will automatically hash the password when it is set.
+     */
+    protected function password(): Attribute // Add this entire method
+    {
+        return Attribute::make(
+            set: fn (?string $value) => $value ? bcrypt($value) : null,
+        );
     }
 }

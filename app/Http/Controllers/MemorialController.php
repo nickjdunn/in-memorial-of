@@ -48,6 +48,8 @@ class MemorialController extends Controller
             'photo_shape' => ['required', 'string', Rule::in(['rounded-full', 'rounded-2xl', '', 'shape-diamond', 'shape-octagon', 'shape-heart', 'shape-cross'])],
             'user_id' => 'sometimes|required|exists:users,id',
             'tributes_enabled' => 'nullable|string',
+            'visibility' => ['required', Rule::in(['public', 'private'])],
+            'password' => 'nullable|required_if:visibility,private|string|min:4',
         ]);
 
         $isAdminCreation = $request->has('user_id') && auth()->user()->is_admin;
@@ -90,6 +92,8 @@ class MemorialController extends Controller
             'font_family_body' => $validated['font_family_body'],
             'photo_shape' => $validated['photo_shape'],
             'tributes_enabled' => $request->has('tributes_enabled'),
+            'visibility' => $validated['visibility'],
+            'password' => $validated['password'],
         ]);
         
         if ($isAdminCreation) {
@@ -113,12 +117,9 @@ class MemorialController extends Controller
         if (auth()->id() !== $memorial->user_id && !auth()->user()->is_admin) {
             abort(403);
         }
-
-        // MODIFIED: Eager load tributes and separate them by status
         $memorial->load('tributes');
         $pendingTributes = $memorial->tributes->where('status', 'pending');
         $approvedTributes = $memorial->tributes->where('status', 'approved');
-
         return view('memorials.edit', compact('memorial', 'pendingTributes', 'approvedTributes'));
     }
 
@@ -143,6 +144,8 @@ class MemorialController extends Controller
             'photo_shape' => ['required', 'string', Rule::in(['rounded-full', 'rounded-2xl', '', 'shape-diamond', 'shape-octagon', 'shape-heart', 'shape-cross'])],
             'redirect_to_user' => 'nullable|exists:users,id',
             'tributes_enabled' => 'nullable|string',
+            'visibility' => ['required', Rule::in(['public', 'private'])],
+            'password' => 'nullable|required_if:visibility,private|string|min:4',
         ]);
 
         $birthDate = $this->combineDate($request->birth_year, $request->birth_month, $request->birth_day);
@@ -167,6 +170,16 @@ class MemorialController extends Controller
         $memorial->date_of_birth = $birthDate;
         $memorial->date_of_passing = $passingDate;
         $memorial->tributes_enabled = $request->has('tributes_enabled');
+        
+        if ($validated['visibility'] === 'public') {
+            $memorial->password = null;
+        } else {
+            // Only update password if a new one is provided.
+            if (!empty($validated['password'])) {
+                $memorial->password = $validated['password'];
+            }
+        }
+        
         $memorial->save();
         
         if ($request->has('redirect_to_user') && auth()->user()->is_admin) {

@@ -189,21 +189,53 @@
                             </div>
                         </div>
 
-                        <!-- ================ NEW: ENABLE TRIBUTES TOGGLE ================ -->
-                        <div class="pt-6 border-t">
+                        <!-- Page Features Section -->
+                        <div class="pt-6 border-t" x-data="{ visibility: '{{ old('visibility', 'public') }}' }">
                             <h3 class="text-lg font-medium leading-6 font-heading border-b pb-2 mb-4">Page Features</h3>
-                            <div class="relative flex items-start">
-                                <div class="flex h-6 items-center">
-                                    <input id="tributes_enabled" name="tributes_enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" checked>
+                            <div class="space-y-6">
+                                <!-- Enable Tributes Toggle -->
+                                <div class="relative flex items-start">
+                                    <div class="flex h-6 items-center">
+                                        <input id="tributes_enabled" name="tributes_enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" checked>
+                                    </div>
+                                    <div class="ml-3 text-sm leading-6">
+                                        <label for="tributes_enabled" class="font-medium text-gray-900">Enable Tributes</label>
+                                        <p class="text-gray-500">Allow visitors to leave tributes on the memorial page.</p>
+                                    </div>
                                 </div>
-                                <div class="ml-3 text-sm leading-6">
-                                    <label for="tributes_enabled" class="font-medium text-gray-900">Enable Tributes</label>
-                                    <p class="text-gray-500">Allow visitors to leave tributes on the memorial page. This feature can be turned on or off at any time.</p>
-                                </div>
+
+                                <!-- Privacy Settings -->
+                                <fieldset>
+                                    <legend class="text-sm font-medium leading-6 text-gray-900">Privacy</legend>
+                                    <p class="text-sm text-gray-500">Choose who can see this memorial page.</p>
+                                    <div class="mt-4 space-y-4">
+                                        <div class="flex items-center">
+                                            <input x-model="visibility" id="visibility-public" name="visibility" type="radio" value="public" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                                            <label for="visibility-public" class="ml-3 block text-sm font-medium leading-6 text-gray-900">Public (Only those with the link can see it)</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input x-model="visibility" id="visibility-private" name="visibility" type="radio" value="private" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                                            <label for="visibility-private" class="ml-3 block text-sm font-medium leading-6 text-gray-900">Private (Password Protected)</label>
+                                        </div>
+                                    </div>
+                                    <div x-show="visibility === 'private'" x-transition class="mt-4" x-data="{ show: false }">
+                                        <x-input-label for="password" value="Set Password" />
+                                        <div class="relative mt-1">
+                                            <!-- THIS IS THE CORRECTED PART: Using a plain HTML input tag -->
+                                            <input id="password" name="password" 
+                                                   :type="show ? 'text' : 'password'"
+                                                   class="block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
+                                                <svg @click="show = !show" x-show="!show" class="h-5 w-5 text-gray-400 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                                <svg @click="show = !show" x-show="show" x-cloak class="h-5 w-5 text-gray-400 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7 1.274-4.057 5.064 7-9.542 7 1.356 0 2.64 .316 3.825 .875M17.5 17.5l-2.086-2.086M9 9l-2.086-2.086m0 0A9.986 9.986 0 0112 5c.83 0 1.633 .11 2.38 .315" /></svg>
+                                            </div>
+                                        </div>
+                                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                                    </div>
+                                    <x-input-error :messages="$errors->get('visibility')" class="mt-2" />
+                                </fieldset>
                             </div>
                         </div>
-                        <!-- ============================================================= -->
-
                     </div>
                     
                     <div class="flex items-center justify-end p-6 bg-gray-50 border-t border-gray-200">
