@@ -6,6 +6,8 @@ use App\Models\Memorial;
 use App\Models\Tribute;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
@@ -102,14 +104,41 @@ class MemorialController extends Controller
         return redirect()->route('dashboard')->with('status', 'Memorial page created successfully!');
     }
 
-    public function showPublic(Memorial $memorial)
+    public function showPublic(Request $request, Memorial $memorial)
     {
+        // Check if the page is private
+        if ($memorial->visibility === 'private') {
+            // Allow access if the logged-in user is the owner or an admin
+            if (Auth::check() && (Auth::id() === $memorial->user_id || Auth::user()->is_admin)) {
+                // They are authorized, proceed to show the page
+            }
+            // Check if the visitor has already unlocked this memorial in their session
+            else if ($request->session()->get('memorial_access_' . $memorial->id) !== true) {
+                // If not, show the password gate
+                return view('memorials.auth.password', compact('memorial'));
+            }
+        }
+
         $approvedTributes = Tribute::where('memorial_id', $memorial->id)
             ->where('status', 'approved')
             ->latest()
             ->get();
 
         return view('memorials.show_public', compact('memorial', 'approvedTributes'));
+    }
+
+    public function checkPassword(Request $request, Memorial $memorial)
+    {
+        $request->validate(['password' => 'required']);
+
+        if (Hash::check($request->password, $memorial->password)) {
+            // Password is correct. Store access token in session.
+            $request->session()->put('memorial_access_' . $memorial->id, true);
+            return redirect()->route('memorials.show_public', $memorial->slug);
+        }
+
+        // Password was incorrect. Redirect back with an error.
+        return back()->with('error', 'The password provided was incorrect.');
     }
 
     public function edit(Memorial $memorial)
@@ -145,7 +174,7 @@ class MemorialController extends Controller
             'redirect_to_user' => 'nullable|exists:users,id',
             'tributes_enabled' => 'nullable|string',
             'visibility' => ['required', Rule::in(['public', 'private'])],
-            'password' => 'nullable|required_if:visibility,private|string|min:4',
+            'password' => 'nullable|string|min:4',
         ]);
 
         $birthDate = $this->combineDate($request->birth_year, $request->birth_month, $request->birth_day);
@@ -174,9 +203,8 @@ class MemorialController extends Controller
         if ($validated['visibility'] === 'public') {
             $memorial->password = null;
         } else {
-            // Only update password if a new one is provided.
-            if (!empty($validated['password'])) {
-                $memorial->password = $validated['password'];
+            if (!empty($request->password)) {
+                $memorial->password = $request->password;
             }
         }
         

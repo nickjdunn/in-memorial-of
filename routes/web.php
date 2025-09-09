@@ -48,7 +48,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/purchase/cancel', [PurchaseController::class, 'cancel'])->name('purchase.cancel');
     Route::resource('memorials', MemorialController::class)->except(['index', 'show']);
 
-    // --- NEW TRIBUTE MODERATION ROUTES ---
     Route::get('/tributes', [TributeController::class, 'index'])->name('tributes.index');
     Route::patch('/tributes/{tribute}/approve', [TributeController::class, 'approve'])->name('tributes.approve');
     Route::delete('/tributes/{tribute}', [TributeController::class, 'destroy'])->name('tributes.destroy');
@@ -56,6 +55,7 @@ Route::middleware('auth')->group(function () {
 
 // Public Memorial Page Route
 Route::get('/memorials/{memorial:slug}', [MemorialController::class, 'showPublic'])->name('memorials.show_public');
+Route::post('/memorials/{memorial:slug}/password', [MemorialController::class, 'checkPassword'])->name('memorials.password.check'); // ADD THIS LINE
 
 // Tribute Submission Route
 Route::post('/memorials/{memorial:slug}/tributes', [TributeController::class, 'store'])->name('tributes.store');
