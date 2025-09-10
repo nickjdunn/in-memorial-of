@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MemorialController as AdminMemorialController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TributeController as AdminTributeController; // ADD THIS LINE
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DynamicCssController;
 use App\Http\Controllers\MemorialController;
@@ -55,16 +56,18 @@ Route::middleware('auth')->group(function () {
 
 // Public Memorial Page Route
 Route::get('/memorials/{memorial:slug}', [MemorialController::class, 'showPublic'])->name('memorials.show_public');
-Route::post('/memorials/{memorial:slug}/password', [MemorialController::class, 'checkPassword'])->name('memorials.password.check'); // ADD THIS LINE
+Route::post('/memorials/{memorial:slug}/password', [MemorialController::class, 'checkPassword'])->name('memorials.password.check');
 
 // Tribute Submission Route
 Route::post('/memorials/{memorial:slug}/tributes', [TributeController::class, 'store'])->name('tributes.store');
 
 // --- ADMIN ROUTES ---
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', fn() => redirect()->route('admin.users.index'))->name('dashboard');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/memorials', [AdminMemorialController::class, 'index'])->name('memorials.index');
+    Route::get('/tributes', [AdminTributeController::class, 'index'])->name('tributes.index'); // ADD THIS LINE
+
     Route::get('/memorials/{memorial}/edit', [MemorialController::class, 'edit'])->name('memorials.edit');
     Route::put('/memorials/{memorial}', [MemorialController::class, 'update'])->name('memorials.update');
     Route::delete('/memorials/{memorial}', [MemorialController::class, 'destroy'])->name('memorials.destroy');
