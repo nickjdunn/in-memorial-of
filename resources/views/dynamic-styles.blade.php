@@ -1,91 +1,72 @@
+/*
+    In Memorial Of - Dynamic Stylesheet
+    Generated: {{ now() }}
+*/
+
 :root {
-    /* Primary (Button/Accent) Color Palette */
-    --color-primary-50: {{ $settings['primary_color_50'] ?? '#eff6ff' }};
-    --color-primary-100: {{ $settings['primary_color_100'] ?? '#dbeafe' }};
-    --color-primary-200: {{ $settings['primary_color_200'] ?? '#bfdbfe' }};
-    --color-primary-300: {{ $settings['primary_color_300'] ?? '#93c5fd' }};
-    --color-primary-400: {{ $settings['primary_color_400'] ?? '#60a5fa' }};
-    --color-primary-500: {{ $settings['primary_color_500'] ?? '#3b82f6' }};
-    --color-primary-600: {{ $settings['primary_color_600'] ?? '#2563eb' }};
-    --color-primary-700: {{ $settings['primary_color_700'] ?? '#1d4ed8' }};
-    --color-primary-800: {{ $settings['primary_color_800'] ?? '#1e40af' }};
-    --color-primary-900: {{ $settings['primary_color_900'] ?? '#1e3a8a' }};
-    --color-primary-950: {{ $settings['primary_color_950'] ?? '#172554' }};
-    
-    /* Text & Link Colors */
-    --color-text-base: {{ $settings['text_color_base'] ?? '#374151' }};
-    --color-text-heading: {{ $settings['text_color_heading'] ?? '#111827' }};
-    --color-link: {{ $settings['link_color'] ?? '#2563eb' }};
-    --color-link-hover: {{ $settings['link_hover_color'] ?? '#1e3a8a' }};
+    /* ==========================================================================
+       1. Theme Variables - Fetched from your database settings
+       ========================================================================== */
 
     /* Header & Navigation Colors */
-    --color-header-bg: {{ $settings['header_bg_color'] ?? '#1e3a8a' }};
-    --color-header-text: {{ $settings['header_text_color'] ?? '#ffffff' }};
-    --color-nav-link: {{ $settings['nav_link_color'] ?? '#dbeafe' }};
-    --color-nav-link-hover: {{ $settings['nav_link_hover_color'] ?? '#ffffff' }};
-    --color-nav-link-active: {{ $settings['nav_link_active_color'] ?? '#ffffff' }};
+    --header-bg-color: {{ $settings['header_bg_color'] ?? '#ffffff' }};
+    --header-text-color: {{ $settings['header_text_color'] ?? '#111827' }};
+    --nav-link-color: {{ $settings['nav_link_color'] ?? '#6b7280' }};
+    --nav-link-hover-color: {{ $settings['nav_link_hover_color'] ?? '#374151' }};
+    --nav-link-active-color: {{ $settings['nav_link_active_color'] ?? '#4f46e5' }};
 
-    /* Fonts */
-    --font-family-base: '{{ $settings['font_family_base'] ?? 'Figtree' }}', sans-serif;
+    /* General Page Element Colors */
+    --primary-color-500: {{ $settings['primary_color_500'] ?? '#6366f1' }};
+    --text-color-base: {{ $settings['text_color_base'] ?? '#374151' }};
+    --text-color-heading: {{ $settings['text_color_heading'] ?? '#111827' }};
+    --link-color: {{ $settings['link_color'] ?? '#4f46e5' }};
+    --link-hover-color: {{ $settings['link_hover_color'] ?? '#3730a3' }};
+    
+    /* Typography */
+    --font-family-base: '{{ $settings['font_family_base'] ?? 'Inter' }}', sans-serif;
     --font-family-headings: '{{ $settings['font_family_headings'] ?? 'Figtree' }}', sans-serif;
 }
 
-/* Base body styles */
+/* ==========================================================================
+   2. Applying The Theme - Overriding default styles with our variables
+   ========================================================================== */
+
 body {
     font-family: var(--font-family-base);
-    color: var(--color-text-base);
+    color: var(--text-color-base);
 }
+
 h1, h2, h3, h4, h5, h6, .font-heading {
     font-family: var(--font-family-headings);
-    color: var(--color-text-heading);
+    color: var(--text-color-heading);
 }
 
-/* Unified Header Styling */
-.unified-header {
-    background-color: var(--color-header-bg);
-}
-.page-title {
-    color: var(--color-header-text);
+/* --- App Layout & Navigation --- */
+nav.bg-white { 
+    background-color: var(--header-bg-color) !important;
 }
 
-/* Main Navigation Link Styling */
-.main-nav a { color: var(--color-nav-link); }
-.main-nav a:hover { color: var(--color-nav-link-hover); }
-.main-nav a.active-nav-link { color: var(--color-nav-link-active); border-color: var(--color-nav-link-active) !important; }
-.main-nav-dropdown-trigger { color: var(--color-nav-link); }
-.main-nav-dropdown-trigger:hover { color: var(--color-nav-link-hover); }
-.main-nav-responsive { background-color: var(--color-header-bg); }
-.main-nav-responsive-border { border-color: var(--color-primary-700); }
-.main-nav-responsive-text { color: var(--color-header-text); }
-.main-nav-responsive-email { color: var(--color-nav-link); }
-
-/* Content Link styles */
-.main-content a:not(.button-link), table a:not(.button-link) {
-    color: var(--color-link);
-    text-decoration: none;
-    transition: color 0.2s ease-in-out;
-}
-.main-content a:not(.button-link):hover, table a:not(.button-link):hover {
-    color: var(--color-link-hover);
-    text-decoration: underline;
+.page-title { /* For headings like "Site Settings" */
+    color: var(--header-text-color);
 }
 
-/* Helper classes for brand colors (mostly for buttons and accents) */
-.bg-brand-600 { background-color: var(--color-primary-600); }
-.hover\:bg-brand-500:hover { background-color: var(--color-primary-500); }
-.focus\:bg-brand-700:focus { background-color: var(--color-primary-700); }
-.active\:bg-brand-900:active { background-color: var(--color-primary-900); }
+.text-gray-500 { color: var(--nav-link-color); }
+.hover\:text-gray-700:hover { color: var(--nav-link-hover-color) !important; }
+.border-indigo-500 { border-color: var(--nav-link-active-color) !important; }
+.text-indigo-600 { color: var(--nav-link-active-color) !important; }
 
-.text-brand-600 { color: var(--color-primary-600); }
-.text-brand-800 { color: var(--color-primary-800); }
-.text-brand-700 { color: var(--color-primary-700); }
-.text-brand-900 { color: var(--color-primary-900); }
+/* --- Buttons --- */
+x-primary-button, .bg-indigo-600 {
+    background-color: var(--primary-color-500);
+}
+x-primary-button:hover, .hover\:bg-indigo-700:hover {
+    filter: brightness(0.9);
+}
 
-.border-brand-500 { border-color: var(--color-primary-500); }
-
-.focus\:ring-brand-500:focus { --tw-ring-color: var(--color-primary-500); }
-
-/* Memorial page specific background */
-.memorial-page-bg {
-    background-color: #111827; /* Tailwind's gray-900 */
+/* --- General Links --- */
+a, .text-indigo-600 {
+    color: var(--link-color);
+}
+a:hover, .hover\:text-indigo-900:hover {
+    color: var(--link-hover-color);
 }

@@ -18,6 +18,11 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <!-- This is the crucial line that makes the theme work -->
+        <!-- It must be placed AFTER the main app.css file to override the default styles. -->
+        <link rel="stylesheet" href="{{ route('css.dynamic') }}">
+
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
